@@ -10,7 +10,7 @@ get some hands on experience with the methods.
 
 ### Material
 You can download the required material from these sources:  
-DOWNLOAD LINK A  
+[R-Script](../_static/Extreme_detection_script.R)
 DOWNLOAD LINK B  
 
 Bla
