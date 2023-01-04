@@ -1,9 +1,16 @@
 ---
 layout: post
-title: "Extreme Detection"
+title: "3 - Extreme Detection"
 categories: misc
 ---
 
-This should be the excerpt
+In this exercise we will look at extreme values in meteorological data. First you will learn about different ways to define what is an "extreme" 
+value (extreme relative to what?). Afterwards we will work with an example dataset and play around with an existing R-Script to 
+get some hands on experience with the methods.
 
-This will be the rest
+### Material
+You can download the required material from these sources:  
+DOWNLOAD LINK A  
+DOWNLOAD LINK B  
+
+Bla
