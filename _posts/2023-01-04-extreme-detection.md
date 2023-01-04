@@ -10,7 +10,8 @@ get some hands on experience with the methods.
 
 ### Material
 You can download the required material from these sources:  
-[R-Script](Extreme_detection_script.R)
-DOWNLOAD LINK B  
+[R-Script](Extreme_detection_script.R)  
+[Required Data](Tair_TS_CH-Dav_1997_2018.RData)  
+[Literatur](wmo-td_1500_en.pdf)  
 
-Bla
+TESTEST
