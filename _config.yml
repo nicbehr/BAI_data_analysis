@@ -1,4 +1,11 @@
-#Build Settings
+# Site info
+title: BAI Data Analysis Intro
+author: Nicolas Behrens
+email: nicolas.behrens@uni-muenster.de
+description: >
+On this page we will explore some methods of data analysis in ecophysiology in R
+
+# Build Settings
 markdown: kramdown
 theme: minima
 plugins:
