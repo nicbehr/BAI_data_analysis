@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "3 - Extreme Detection"
+title: "Exercise 3 - Extreme Detection"
 categories: misc
 ---
 
@@ -10,7 +10,7 @@ get some hands on experience with the methods.
 
 ### Material
 You can download the required material from these sources:  
-[R-Script](../_static/Extreme_detection_script.R)
+[R-Script](Extreme_detection_script.R)
 DOWNLOAD LINK B  
 
 Bla
