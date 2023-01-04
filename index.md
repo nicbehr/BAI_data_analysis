@@ -1,3 +1,7 @@
+---
+layout: page
+---
+
 # h1
 test index file
 
