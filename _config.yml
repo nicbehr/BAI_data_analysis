@@ -1,8 +1,7 @@
 # Site info
 title: BAI Data Analysis Intro
 author: Nicolas Behrens
-email: nicolas.behrens@uni-muenster.de
-description: On this page we will explore some methods of data analysis in ecophysiology in R
+email: nicolas.behrens(at)uni-muenster.de
 show_excerpts: true
 
 header-pages:
