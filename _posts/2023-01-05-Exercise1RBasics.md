@@ -1,5 +1,7 @@
 
 ### Basics of R
+This interactive tutorial will get you started on your data-exploration road and make you familiar with some core
+concepts of R and programming.
 
 #### Table of Contents
 1. [Data Types and Variables](#1-data-types-and-variables)
@@ -8,9 +10,6 @@
 4. [Data Structures](#4-data-structures)
 5. [Visualizing Data](#5-visualizing-data)
 6. [Extra: Loops and Conditionals](#6-extra-loops-and-conditionals)
-
-This interactive tutorial will get you started on your data-exploration road and make you familiar with some core
-concepts of R and programming.
 
 Notice that it is not at all expected that you learn all these things and they are burnt into your brain (!!!!!). 
 It is more of a broad intrdocution to all the basics so you have hard of them, but programmers do look up stuff
