@@ -421,8 +421,8 @@ biggerStringVector = stringVector + 5
 
 ```
 
---------------------------
-### 4.2 Dataframes
+
+#### 4.2 Dataframes
 
 
 Dataframes are also very important data structures. They are 2-dimensional and built like a table.
@@ -453,10 +453,6 @@ df
 </tbody>
 </table>
 
-
-
-
-
 If you want to find out how many rows or columns your dataframes has  there are nice functions to do that, nrow and ncol
 which just stands for "number of rows" and "number of columns"
 ```R
@@ -468,7 +464,6 @@ Ouput:
 4
 3
 ```
-
 
 The data frame gives you some great ways to access the data. Because it is a 2-dimensional construct you can get values
 with 2-dimensional indices in square brackets, defining first the row and second the column index:
@@ -669,8 +664,7 @@ Loops allow you to easily do operations with a large number
 of values while conditions define specific circumstances, under which an operation should be done.
 Here we will just look at two specific strcutures: the for-loop and the if-condition.
 
---------------------------
-### 6.1 The For-loop
+#### 6.1 The For-loop
 The for-loop is a very useful loop. It repeatedly executes some operation for as many times as you tell it to.
 lets look at a little example:
 ```R
@@ -698,7 +692,8 @@ Hint: In the function define a variable that is 0. Then you can loop over your i
 list.
 
 --------------------------
-### 5.2 The if-condition
+
+#### 6.2 The if-condition
 
 The if condition does pretty much exactly what you would expect it to do. It executes the codeblock in its 
 body IF a certain condition is true. Here is a very easy example:
