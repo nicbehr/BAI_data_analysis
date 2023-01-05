@@ -6,10 +6,10 @@ description: On this page we will explore some methods of data analysis in ecoph
 show_excerpts: true
 
 header-pages:
-  - 2023-01-05-Exercise1RBasics.md
-  - 2023-01-05-Exercise2Plotting.md
-  - 2023-01-05-Exercise3Interpolation.md
-  - 2023-01-04-Exercise4ExtremeDetection.md
+  - Exercise1RBasics.md
+  - Exercise2Plotting.md
+  - Exercise3Interpolation.md
+  - Exercise4ExtremeDetection.md
 
 # Build Settings
 markdown: kramdown
