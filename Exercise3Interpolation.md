@@ -89,11 +89,16 @@ y = 125 * x
 where y is the amount of flour in grams and x is the number of people eating cake.
 
 The formula for an interpolation between two points (x1,y1) and (x2,y2) at a specific point
-(xn, yn) is:
+(xn, yn) is:  
+
 <div> $$ yn = y1 + \frac{(y_{2}-y_{1})}{(x_{2}-x_{1})} * (x_{n} - x_{1}) $$ </div>
+
 We simply construct a straight line where y1 is our y-intercept, the slope is derived 
-from the two points with the well known slope-formula "m = (y2-y1)/(x2-x1)", and our x value 
-on this constructed line is difference between the point we want to look at minus the starting point
+from the two points with the well known slope-formula 
+
+<div> $$ m = (y2-y1)/(x2-x1) $$ </div> 
+
+and our x value on this constructed line is difference between the point we want to look at minus the starting point
 
 Note that in this form of y = mx + b we only have one x which we use to explain our y-value. We have one "predictor".
 Using only one predictor gives us a so called simple linear regression. This is a super simple form of interpolation 
@@ -205,9 +210,10 @@ The error is usually measured as the "sum of squared errors" (SSE) which is the 
 and the predicted value. We square it to avoid negative and positive values counterbalancing each other. 
 
 
-Looking at an array of n data points we can write
-<div> $$ SSE = \sum_{i=1}^n (y(i) - b - m * x(i))^2 $$ </div> 
+Looking at an array of n data points we can write  
 
+<div> $$ SSE = \sum_{i=1}^n (y(i) - b - m * x(i))^2 $$ </div> 
+  
 y(i) is the true y value at the predicted point, b is the y-intercept of the linear model, 
 m is the first coefficient of the linear model and x(i) is the x-value at the predicted point. 
 
@@ -220,7 +226,7 @@ a "minimization problem" and specifically the estimation of this line is called 
 In the easiest way of fitting a linear model to such a dataset, it all depends on the mean of our dataset.
 To derive the model parameters we can use the following relations where we replace b with alpha and m with beta
 (as that is the general standard). Also we will now denote the predicted y-value with a ^ on top of that, which is
-the common standard in literature. Sometimes this is also referred to as y_hat.
+the common standard in literature. Sometimes this is also referred to as y_hat.  
 
 <div> $$ \hat{y}_{i} = \alpha + \beta * x_{i} $$ </div>
 
