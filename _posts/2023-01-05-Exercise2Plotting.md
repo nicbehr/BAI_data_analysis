@@ -8,7 +8,7 @@ In this exercise we will look at the basics of how to load datasets, prepare the
 and use the common ggplot-library for plotting
 
 First of all, download the .csv data files and put them in the same folder
-as this script.
+as this script.  
 [Data Download](data.zip)
 
 Then use this command to set the working directoy to the directory you have the script in:
@@ -63,12 +63,12 @@ The datetime column now looks like this:
 ...
 ```
 
-With that we can use the "dplyr" package to aggregate the data to daily values:
+With that we can use the "dplyr" package to aggregate the data to daily values:  
 the %>% operator just concatenates different operations
 so we take the original dataset and group it by the column datetime
 to aggregate the data we use the dplyr package and from that the summarize_if() 
 function. For one we can specify that we only want to aggregate the numeric columns,
-which excludes the datetime column. We don't want to sum up the dates right...
+which excludes the datetime column. We don't want to sum up the dates!  
 Secondly we pass the way we want to aggregate the data, which is the mean for 
 most columns:
 ```R
@@ -181,7 +181,6 @@ WD_figure = ggplot(wind_data, aes(x=wd)) +
   ggtitle("Wind direction in Amtsvenn")
 print(WD_figure)
 ```
-You can look at some further customization options in the documentation or 
-for example on 
-http://www.sthda.com/english/wiki/ggplot2-histogram-plot-quick-start-guide-r-software-and-data-visualization
+You can look at some further customization options in the documentation or for example here: 
+[Link: sthda.com Intro to Data Visualization](http://www.sthda.com/english/wiki/ggplot2-histogram-plot-quick-start-guide-r-software-and-data-visualization)
 

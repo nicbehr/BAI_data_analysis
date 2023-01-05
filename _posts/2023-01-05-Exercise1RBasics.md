@@ -22,11 +22,9 @@ can always come back and find help in here, in the internet or from me directly.
   
 Here are some useful ressources if you get stuck:
 
-A general tutorial on several topics:
-https://www.tutorialkart.com/r-tutorial/
+[Link: A general tutorial on several topics](https://www.tutorialkart.com/r-tutorial/)
 
-a comprehensive list of built-in functions:
-https://www.javatpoint.com/r-built-in-functions
+[Link: A comprehensive list of built-in functions](https://www.javatpoint.com/r-built-in-functions)
 
 and last but not least, if you need help with a specific function (we will talk about functions later), you can 
 use the nice inbuilt method help(). For example you can run help(paste) and will directly see the documentation
