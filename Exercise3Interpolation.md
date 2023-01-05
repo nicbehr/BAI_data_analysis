@@ -90,7 +90,7 @@ where y is the amount of flour in grams and x is the number of people eating cak
 
 The formula for an interpolation between two points (x1,y1) and (x2,y2) at a specific point
 (xn, yn) is:
-$$ yn = y1 + \frac{(y_{2}-y_{1})}{(x_{2}-x_{1})} * (x_{n} - x_{1}) $$
+<div>$$ yn = y1 + \frac{(y_{2}-y_{1})}{(x_{2}-x_{1})} * (x_{n} - x_{1}) $$</div>
 We simply construct a straight line where y1 is our y-intercept, the slope is derived 
 from the two points with the well known slope-formula "m = (y2-y1)/(x2-x1)", and our x value 
 on this constructed line is difference between the point we want to look at minus the starting point
