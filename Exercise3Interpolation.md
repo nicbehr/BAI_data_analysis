@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Exercise 3 - Interpolation and Gap Filling"
+title: "3 - Interpolation and Gap Filling"
 permalink: /exercise-3/
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Exercise 1 - Basics of R"
+title: "1 - Basics of R"
 permalink: /exercise-1/
 ---
 
