@@ -90,7 +90,7 @@ where y is the amount of flour in grams and x is the number of people eating cak
 
 The formula for an interpolation between two points (x1,y1) and (x2,y2) at a specific point
 (xn, yn) is:
-$$ yn = y1 + \frac{(y_{2}-y_{1})}{(x_{2}-x_{1})} * (x_{n} - x_{1}) $$
+<div> $$ yn = y1 + \frac{(y_{2}-y_{1})}{(x_{2}-x_{1})} * (x_{n} - x_{1}) $$ </div>
 We simply construct a straight line where y1 is our y-intercept, the slope is derived 
 from the two points with the well known slope-formula "m = (y2-y1)/(x2-x1)", and our x value 
 on this constructed line is difference between the point we want to look at minus the starting point
@@ -182,7 +182,7 @@ temperature way off.
 A simple measure of how well our model performed is to look at the residual standard error. We calculate it
 as
 
-$$ \sqrt{\frac{\sum_{i=1}^n (y[i] - ypredicted[i])^2}{df}} $$
+<div> $$ \sqrt{\frac{\sum_{i=1}^n (y[i] - ypredicted[i])^2}{df}} $$ </div>
 
 where y is the true value, ypredicted is the predicted y value, and df is the degrees of freedom. Df is the total
 number of observations used for the model fitting minus the number of model parameters. Since we have 11 total 
@@ -206,7 +206,7 @@ and the predicted value. We square it to avoid negative and positive values coun
 
 
 Looking at an array of n data points we can write
-$$ SSE = \sum_{i=1}^n (y(i) - b - m * x(i))^2 $$
+<div> $$ SSE = \sum_{i=1}^n (y(i) - b - m * x(i))^2 $$ </div> 
 
 y(i) is the true y value at the predicted point, b is the y-intercept of the linear model, 
 m is the first coefficient of the linear model and x(i) is the x-value at the predicted point. 
@@ -222,11 +222,11 @@ To derive the model parameters we can use the following relations where we repla
 (as that is the general standard). Also we will now denote the predicted y-value with a ^ on top of that, which is
 the common standard in literature. Sometimes this is also referred to as y_hat.
 
-$$ \hat{y}_{i} = \alpha + \beta * x_{i} $$
+<div> $$ \hat{y}_{i} = \alpha + \beta * x_{i} $$ </div>
 
-$$ \alpha = \bar{y} - (m \bar{x}) $$
+<div> $$ \alpha = \bar{y} - (m \bar{x}) $$ </div>
 
-$$ \beta = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} $$
+<div> $$ \beta = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} $$ </div>
 
 
 
