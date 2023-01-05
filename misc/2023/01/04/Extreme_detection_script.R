@@ -9,6 +9,12 @@
 library(dplyr)
 library(boot)
 library(ggplot2)
+library(zoo)
+
+meanFunc <- function (data, i){
+  d<-data [i]
+  return (mean (d))   
+}
 
 Extreme_detection = function(X,timecol,prob, method) 
 {
@@ -16,10 +22,14 @@ Extreme_detection = function(X,timecol,prob, method)
   {
     sprintf('Extremes detection using peak over threshold method at: %f percentile',prob)
     DF = data.frame(Value = X, Date = timecol)
-    DF = DF %>% mutate(Extreme = if_else(Value > quantile(Value, probs = prob*0.01, na.rm = TRUE), 'Extreme-high',
+    DF = DF %>% 
+      mutate(Extreme = if_else(Value > quantile(Value, probs = prob*0.01, na.rm = TRUE), 'Extreme-high',
                                          if_else(Value < quantile(Value, probs = (1- prob*0.01), na.rm = TRUE), 'Extreme-low', 'Not-Extreme')))  ## selecting values higher and lower than the percentile
     
-    p = DF %>% ggplot(., aes(x = Date, y = Value)) + geom_point(aes(color = Extreme)) + geom_line(linewidth = 0.4) + theme_bw()
+    p = DF %>% 
+      ggplot(., aes(x = Date, y = Value)) + 
+      geom_point(aes(color = Extreme)) + 
+      geom_line(size = 0.4) + theme_bw()
     print(p)
     return(DF)
   }
@@ -36,8 +46,13 @@ Extreme_detection = function(X,timecol,prob, method)
       mutate(Extreme = if_else(del_Var > quantile(del_Var, probs = prob*0.01, na.rm = TRUE), 'Extreme-high',
                                if_else(del_Var < quantile(del_Var, probs = (1-prob*0.01), na.rm = TRUE), 'Extreme-low', 'Not-Extreme')))  ## Assigning extreme classes based on del_Var
     
-    p = DF %>% ggplot(., aes(x = Date)) + geom_point(aes(y = Value, fill = Extreme), color = 'black', stroke = 0, shape = 21) + geom_line(aes(y = Value, color = 'Value'), linewidth = 0.4) + theme_bw() +
-      geom_line(aes(y = Var_LTm, color = 'Long-term mean'), linewidth = 0.8) + scale_color_manual('', values = c('black','grey50'))
+    p = DF %>% 
+      ggplot(., aes(x = Date)) + 
+      geom_point(aes(y = Value, fill = Extreme), color = 'black', stroke = 0, shape = 21) + 
+      geom_line(aes(y = Value, color = 'Value'), size = 0.4) + 
+      theme_bw() +
+      geom_line(aes(y = Var_LTm, color = 'Long-term mean'), size = 0.8) + 
+      scale_color_manual('', values = c('black','grey50'))
     
     print(p)
     
@@ -50,13 +65,20 @@ Extreme_detection = function(X,timecol,prob, method)
     sprintf('Extremes detection using "moving average" at %f percentile',prob)
     DF = data.frame(Value = X, Date = timecol) %>% mutate(DOY = as.numeric(format(Date,'%j'))) # calculating DOY for the long-term mean, calculate month if working on monthly data.
     
-    DF = DF %>% arrange(Date) %>%  mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) %>%   ## 15-ay moving average 
+    DF = DF %>% 
+      arrange(Date) %>%  
+      mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) %>%   ## 15-day moving average 
       mutate(del_Var = Value - Var_15ma) %>%       ## deviation from a 15-day moving average (change the days as per requirement)
       mutate(Extreme = if_else(del_Var > quantile(del_Var, probs = prob*0.01, na.rm = TRUE), 'Extreme-high',
                                if_else(del_Var < quantile(del_Var, probs = (1-prob*0.01), na.rm = TRUE), 'Extreme-low', 'Not-Extreme')))  ## Assigning extreme classes based on del_Var
     
-    p = DF %>% ggplot(., aes(x = Date)) + geom_point(aes(y = Value, fill = Extreme), color = 'black', stroke = 0, shape = 21) + geom_line(aes(y = Value, color = 'Value'), linewidth = 0.4) + theme_bw() +
-      geom_line(aes(y = Var_15ma, color = 'moving mean'), linewidth = 0.8) + scale_color_manual('', values = c('black','grey50'))
+    p = DF %>% 
+      ggplot(., aes(x = Date)) + 
+      geom_point(aes(y = Value, fill = Extreme), color = 'black', stroke = 0, shape = 21) + 
+      geom_line(aes(y = Value, color = 'Value'), size = 0.4) + 
+      theme_bw() +
+      geom_line(aes(y = Var_15ma, color = 'moving mean'), size = 0.8) + 
+      scale_color_manual('', values = c('black','grey50'))
     
     print(p)
     
@@ -76,10 +98,10 @@ load('Tair_TS_CH-Dav_1997_2018.RData')  # load the timeseries data provided with
 summary(TairData)
 
 ## Extreme at 95th percentile using POT method---
-Tair_extreme = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'POT')
+Tair_extreme_POT = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'POT')
 
 ## Extreme at 95th percentile using BM method---
-Tair_extreme = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'BM')
+Tair_extreme_BM = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'BM')
 
 ## Extreme at 95th percentile using MA method---
-Tair_extreme = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA')
+Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA')
