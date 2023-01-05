@@ -4,7 +4,6 @@ title: "Exercise 1 - Basics of R"
 categories: misc
 ---
 
-### Basics of R
 This interactive tutorial will get you started on your data-exploration road and make you familiar with some core
 concepts of R and programming.
 
