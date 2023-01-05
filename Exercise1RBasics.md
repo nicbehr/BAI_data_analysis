@@ -152,6 +152,7 @@ https://www.javatpoint.com/r-built-in-functions
 
 2. Imagine you have a right angled triangle with two side lengths 32cm and 45cm. 
 Given the third side is the hypothenuse, calculate the length of the third site: 
+
 --------------------------
 
 
