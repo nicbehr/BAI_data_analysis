@@ -16,7 +16,8 @@ meanFunc <- function (data, i){
   return (mean (d))   
 }
 
-Extreme_detection = function(X,timecol,prob, method) 
+
+Extreme_detection = function(X,timecol,prob, method, rollmean_period = 15) 
 {
   if(method == 'POT')
   {
@@ -39,7 +40,7 @@ Extreme_detection = function(X,timecol,prob, method)
     sprintf('Extremes detection using block maxima at %f percentile',prob)
     DF = data.frame(Value = X, Date = timecol) %>% mutate(DOY = as.numeric(format(Date,'%j'))) # calculating DOY for long-term mean, calculate month if working on monthly data.
     
-    DF = DF %>% mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) %>%   ## 15-day moving average and then long-term mean
+    DF = DF %>% mutate(Var_15ma = lead(c(rep(NA, rollmean_period - 1),zoo::rollmean(Value,rollmean_period, align = 'center')),7)) %>%   ## 15-day moving average and then long-term mean
       group_by(DOY) %>% 
       mutate(Var_LTm = mean(boot(Var_15ma,meanFunc,100)$t, na.rm = TRUE))  %>%   ## Var_LTm is the long-term mean based on a 15-day moving average-
       mutate(del_Var = Value - Var_LTm) %>%       ## deviation from a long-term mean
@@ -48,14 +49,13 @@ Extreme_detection = function(X,timecol,prob, method)
     
     p = DF %>% 
       ggplot(., aes(x = Date)) + 
-      geom_point(aes(y = Value, fill = Extreme), color = 'black', stroke = 0, shape = 21) + 
+      geom_point(aes(y = Value, fill = Extreme), color = 'black', size=2, stroke = 0, shape = 21) + 
       geom_line(aes(y = Value, color = 'Value'), size = 0.4) + 
       theme_bw() +
       geom_line(aes(y = Var_LTm, color = 'Long-term mean'), size = 0.8) + 
       scale_color_manual('', values = c('black','grey50'))
     
     print(p)
-    
     
     return(DF)
   }
@@ -67,7 +67,7 @@ Extreme_detection = function(X,timecol,prob, method)
     
     DF = DF %>% 
       arrange(Date) %>%  
-      mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) %>%   ## 15-day moving average 
+      mutate(Var_15ma = lead(c(rep(NA, rollmean_period - 1),zoo::rollmean(Value,rollmean_period, align = 'center')),7)) %>%   ## 15-day moving average 
       mutate(del_Var = Value - Var_15ma) %>%       ## deviation from a 15-day moving average (change the days as per requirement)
       mutate(Extreme = if_else(del_Var > quantile(del_Var, probs = prob*0.01, na.rm = TRUE), 'Extreme-high',
                                if_else(del_Var < quantile(del_Var, probs = (1-prob*0.01), na.rm = TRUE), 'Extreme-low', 'Not-Extreme')))  ## Assigning extreme classes based on del_Var
@@ -99,9 +99,117 @@ summary(TairData)
 
 ## Extreme at 95th percentile using POT method---
 Tair_extreme_POT = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'POT')
+Extremes_per_year_POT = Extremes_per_year(Tair_extreme_POT)
+Plot_Extremes(Tair_extreme_POT %>% filter(Date > '2017-01-01'))
+Total_Extremes(Tair_extreme_POT)
+
 
 ## Extreme at 95th percentile using BM method---
-Tair_extreme_BM = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'BM')
+Tair_extreme_BM = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'BM', rollmean_period = 15)
+Quantiles(Tair_extreme_BM$Var_LTm, 5, 95)
+Extremes_per_year_BM = Extremes_per_year(Tair_extreme_BM)
+Plot_Extremes(Tair_extreme_BM %>% filter(Date > '2017-01-01'))
+Total_Extremes(Tair_extreme_BM)
 
 ## Extreme at 95th percentile using MA method---
-Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA')
+Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA', rollmean_period = 15)
+Extremes_per_year_MA = Extremes_per_year(Tair_extreme_BM)
+Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01'))
+Total_Extremes(Tair_extreme_MA)
+Print_Quantile_Thresholds(Tair_extreme_MA, 5, 95)
+Print_Dates_Of_Extremes(Tair_extreme_MA)
+-------------------------------------------------------------------------------
+#3. Additional functions ------------------------------------------------------
+-------------------------------------------------------------------------------
+  
+Quantiles = function(x, q_low, q_high){
+  x_mean = mean(x)
+  x_sd = sd(x)
+  y = dnorm(x, T1997_mean, T1997_sd)
+  qh = quantile(x,q_high*0.01, na.rm=TRUE)
+  ql = quantile(x,q_low*0.01, na.rm=TRUE)
+  
+  above_qh = TairData$Tair_f[TairData$Tair_f > qh]
+  below_ql = TairData$Tair_f[TairData$Tair_f < ql]
+  print(paste("Percentage of values below q",q_low,": ",sep = ""))
+  print(length(above_q90) / length(TairData$Tair_f) * 100)
+  print(paste("Percentage of values above q",q_high,": ",sep = ""))
+  print(length(below_q10) / length(TairData$Tair_f) * 100)
+  
+  plot(x,y)
+  lines(c(ql,ql), c(0,1), col="red", lwd=4)
+  lines(c(qh,qh), c(0,1), col="blue", lwd=4)
+  legend("topleft", legend=c(paste("Q",q_low,sep = ""), paste("Q",q_high,sep = "")), col=c("red","blue"), lty=1, lwd=4)
+}
+
+Print_Quantile_Thresholds = function(DF, lower_limit, upper_limit){
+  print("Lower extreme limit: ")
+  print(quantile(DF$del_var, probs=lower_limit * 0.01 ))
+  print("Upper extreme limit: ")
+  print(quantile(DF$del_var, probs= 1- upper_limit * 0.01 ))
+}
+
+
+Plot_Extremes = function(DF){
+  if ("Var_LTm" %in% colnames(DF)){
+    p = DF %>% 
+      ggplot(., aes(x = Date)) + 
+      geom_point(aes(y = Value, fill = Extreme), color = 'black', size=2, stroke = 0, shape = 21) + 
+      geom_line(aes(y = Value, color = 'Value'), size = 0.4) + 
+      theme_bw() +
+      geom_line(aes(y = Var_LTm, color = 'Long-term mean'), size = 0.8) + 
+      scale_color_manual('', values = c('black','grey50'))
+    
+    print(p)
+  }
+  else {
+    p = DF %>% 
+      ggplot(., aes(x = Date, y = Value)) + 
+      geom_point(aes(color = Extreme)) + 
+      geom_line(size = 0.4) + theme_bw()
+    print(p)
+    return(DF)
+  }
+}
+
+
+Print_Dates_Of_Extremes = function(DF){
+  extremes = DF %>% filter(Extreme == "Extreme-high" | Extreme == "Extreme-low")
+  d = density(extremes$Value)
+  plot(d)
+}
+
+Extremes_per_year = function(df){
+  Extremes_DF = data.frame(matrix(ncol = 4, nrow = 0))
+  colna = c("Year","Extreme_low", "Extreme_high","Not_extreme")
+  colnames(Extremes_DF) = colna
+  startyear = as.integer(format(as.Date(df$Date[1], format="%d/%m/%Y"),"%Y"))
+  endyear = as.integer(format(as.Date(df$Date[nrow(df)], format="%d/%m/%Y"),"%Y"))
+  years = startyear:endyear
+  
+  for (y in years){
+    startdate = paste(y,'-01-01', sep="")
+    enddate = paste(y+1,'-01-01', sep="")
+    year = df %>% 
+      filter((Date < enddate)&(Date >= startdate))
+    table = table(year$Extreme)
+    Extremes_DF[nrow(Extremes_DF)+1,] = c(y, as.numeric(table["Extreme-low"]), as.numeric(table["Extreme-high"]), as.numeric(table["Not-Extreme"]))
+  }
+  
+  Year = Extremes_DF$Year
+  Number_of_Extremes = Extremes_DF$Extreme_high
+  Low_Extremes = Extremes_DF$Extreme_low
+  Not_Extreme = Extremes_DF$Not_extreme
+  
+  plot(Year, Number_of_Extremes, col="red", pch=16)
+  abline(lm(Extreme_high ~ Year, data=Extremes_DF), col="red", lwd=2, lty=2)
+  points(Year, Low_Extremes, col="blue", pch=16)
+  abline(lm(Extreme_low ~ Year, data=Extremes_DF), col="blue", lwd=2, lty=2)
+  legend("topleft", 
+         legend=c("Nr. of high extremes", "Nr. of low extremes", "Regression for high extremes", "Regression for low extremes"), 
+         col=c("red","blue","red","blue"), 
+         pch = c(16,16,NA,NA), 
+         lty=c(NA,NA,2,2),
+         lwd=2)
+  return(Extremes_DF)
+}
