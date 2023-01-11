@@ -142,7 +142,7 @@ Finally, in the very end of the file you find a number of additional functions w
 Peak Over Threshold Codeblock
 </summary>
 
-```R  
+~R  
 
   if(method == 'POT')
   {
@@ -159,7 +159,7 @@ Peak Over Threshold Codeblock
     print(p)
     return(DF)
   }
-```  
+~  
 
 </details>
 
