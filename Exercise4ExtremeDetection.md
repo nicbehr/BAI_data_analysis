@@ -134,10 +134,10 @@ Tair_extreme_BM = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'BM')
 Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA')
 ```
 Finally, in the very end of the file you find a number of additional functions which will be used in the exercises. 
-
 #### 3.1 Peak Over Threshold (POT)
 
-  
+Peak over threshold codeblock:  
+
 ```R  
 
   if(method == 'POT')
@@ -208,7 +208,7 @@ Extra: If you want you can evaluate the trend lines by fiddeling with the functi
 ----------
 
 #### 3.2. Block Maxima Method (BM)
-
+Block maxima codeblock:  
 ```R
   if(method == 'BM')
   {
@@ -289,7 +289,7 @@ Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01' & Date < '2018-01-0
 ---
 
 #### 3.3. Moving Average Method (MA)
-Codeblock:  
+Moving average codeblock:  
 ```R
   if(method == 'MA')
   {
