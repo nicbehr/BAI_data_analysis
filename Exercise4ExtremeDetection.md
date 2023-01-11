@@ -136,6 +136,7 @@ Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA')
 Finally, in the very end of the file you find a number of additional functions which will be used in the exercises. 
 
 #### 3.1 Peak Over Threshold (POT)
+
 <details>
 
 <summary>
