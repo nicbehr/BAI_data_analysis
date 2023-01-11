@@ -202,8 +202,9 @@ You will get a plot of the data with marked extreme low and high values (see spo
 Output Figure:
 </summary>
 
-![A test image](.\misc\2023\01\05\extreme_POT.png)
+![POT image](/assets/extreme_POT.png)
 *Figure 1: Extreme values based on the whole dataset POT method*
+
 </details>
 As expected you can see that this plot gives us information about the extreme values with respect to the whole timeline. 
 
