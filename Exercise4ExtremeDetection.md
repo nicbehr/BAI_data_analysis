@@ -8,12 +8,12 @@ In this exercise we will look at extreme values in meteorological data. First yo
 value (extreme relative to what?). Afterwards we will work with an example dataset and play around with an existing R-Script to get some hands on experience with the methods.
 
 #### Table of Contents
-1. [Material](#1-material)
-2. [Background](#2-background)
-3. [Methods and Implementation](#3-methods-and-implementation)
-  3.1. [Peak Over Threshold (POT)](#31-peak-over-threshold-pot)
-  3.2. [Block Maxima (BM)](#32-block-maxima-method-bm)
-  3.3. [Moving Average (MA)](#33-moving-average-method-ma)
+1. [Material](#1-material)  
+2. [Background](#2-background)  
+3. [Methods and Implementation](#3-methods-and-implementation)  
+  3.1. [Peak Over Threshold (POT)](#31-peak-over-threshold-pot)  
+  3.2. [Block Maxima (BM)](#32-block-maxima-method-bm)  
+  3.3. [Moving Average (MA)](#33-moving-average-method-ma)  
 
 
 ### 1. Material
