@@ -11,6 +11,7 @@ header-pages:
   - Exercise4ExtremeDetection.md
 
 # Build Settings
+markdown: kramdown
 theme: minima
 plugins:
 - jekyll-relative-links
