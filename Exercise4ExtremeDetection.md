@@ -258,36 +258,36 @@ If we where more interested in extreme values across years, we could for example
 
 In our example code the blocks are defined as the values for each single day across all the years. The procedure is as follows: 
 
-**Step 1**
-In the first line we again create a dataframe with the data, a date column and then add a new column called "DOY" with a mutation, that gives each date a value of 1 to 365. We can later use these values to calculate a mean for each year across the seasons:
+**Step 1**  
+In the first line we again create a dataframe with the data, a date column and then add a new column called "DOY" with a mutation, that gives each date a value of 1 to 365. We can later use these values to calculate a mean for each year across the seasons:  
 ``` DF = data.frame(Value = X, Date = timecol) %>% mutate(DOY = as.numeric(format(Date,'%j'))) # calculating DOY ```
 
-**Step 2**
-Next a second mutation is being done, which creates the column "Var_15ma". This is the 15 day moving average around every day. Moving average means that the "window" of data we are calculating the mean from varies. For each data point 
-``` DF = DF %>% mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) # 15-day moving average and then long-term mean ``` 
-Through this, we accquire a smoothing of the daily temperature values and make the underlying dataset for our daily temperature distribution more broad. The reasoning is the following: 
-We want to create a representative dataset for daily temperature values across the years. If we use the single day for each year, we have a dataset of 18 datapoints which can easily include heavy outliers. By using a moving average of 15 days we enhance our dataset for each day by a factor of 15 to 270 datapoints, still restricted to a pretty small time window. While it does reduce the impact of individual extremely hot or cold days, it is more likely to representatively capture the state of the atmosphere around the time of interest.
-
-**Step 3**
-The next step creates the column "Var_LTm". This is the column representing the long-term mean (LTm) for each day of the year: 
+**Step 2**  
+Next a second mutation is being done, which creates the column "Var_15ma". This is the 15 day moving average around every day. Moving average means that the "window" of data we are calculating the mean from varies. For each data point  
+``` DF = DF %>% mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) # 15-day moving average and then long-term mean ```  
+Through this, we accquire a smoothing of the daily temperature values and make the underlying dataset for our daily temperature distribution more broad. The reasoning is the following:  
+We want to create a representative dataset for daily temperature values across the years. If we use the single day for each year, we have a dataset of 18 datapoints which can easily include heavy outliers. By using a moving average of 15 days we enhance our dataset for each day by a factor of 15 to 270 datapoints, still restricted to a pretty small time window. While it does reduce the impact of individual extremely hot or cold days, it is more likely to representatively capture the state of the atmosphere around the time of interest.  
+  
+**Step 3**  
+The next step creates the column "Var_LTm". This is the column representing the long-term mean (LTm) for each day of the year:  
 ```R 
 mutate(Var_LTm = mean(boot(Var_15ma,meanFunc,100)$t, na.rm = TRUE))  %>%   ## Var_LTm is the long-term mean based on a 15-day moving average-
-```
-This is a bit of a nested function call because we use a method called "bootstrapping". Bootstrapping means that we take several random subsamples from the data we have and calculate the mean for each subsample. Then we can look at the distribution of these means e.g. to find confidence intervals. This allows us to asses how representative our mean value for the whole dateset is. Finally, we can calcualte the mean of the means of the subsamples and use that as our final mean value. The function looks like this:
+```  
+This is a bit of a nested function call because we use a method called "bootstrapping". Bootstrapping means that we take several random subsamples from the data we have and calculate the mean for each subsample. Then we can look at the distribution of these means e.g. to find confidence intervals. This allows us to asses how representative our mean value for the whole dateset is. Finally, we can calcualte the mean of the means of the subsamples and use that as our final mean value. The function looks like this:  
 ```R
 mean(boot(Var_15ma,meanFunc,100)$t, na.rm = TRUE))
-```
-The order in which these functions are executed is form the inside out: first the function ```boot()``` is called with the parameters Var_15ma, meanFunc and 100. This means we take 100 subsamples from the column Var_15ma and call the function ```meanFunc()``` on them. This is just a function that calculates the mean of a vector. With the $t after the function call we access the resulting vector of 100 means which is returend from the boot() function. Then we simply calculate the mean from these means and ingore the NA-values with ``` mean(..., na.rm = TRUE)```.
-
-**Step 4**
-Finally we calculate the deviation of each datapoint from the previously derived mean and create a new column called "del_Var". Now these deviations from the mean are split into quantiles and del_vars which are above or below the threshold are defined as extreme:
-
+```  
+The order in which these functions are executed is form the inside out: first the function ```boot()``` is called with the parameters Var_15ma, meanFunc and 100. This means we take 100 subsamples from the column Var_15ma and call the function ```meanFunc()``` on them. This is just a function that calculates the mean of a vector. With the $t after the function call we access the resulting vector of 100 means which is returend from the boot() function. Then we simply calculate the mean from these means and ingore the NA-values with ``` mean(..., na.rm = TRUE)```.  
+  
+**Step 4**  
+Finally we calculate the deviation of each datapoint from the previously derived mean and create a new column called "del_Var". Now these deviations from the mean are split into quantiles and del_vars which are above or below the threshold are defined as extreme:  
+  
 ```R
 mutate(del_Var = Value - Var_LTm) %>%       ## deviation from a long-term mean
 mutate(Extreme = if_else(del_Var > quantile(del_Var, probs = prob*0.01, na.rm = TRUE), 'Extreme-high',
                           if_else(del_Var < quantile(del_Var, probs = (1-prob*0.01), na.rm = TRUE), 'Extreme-low', 'Not-Extreme')))  ## Assigning extreme classes based on del_Var
     
-```
+```  
 Note: In the POT approach the quantiles where built from the whole dataset itself. Here, the quantiles are built from the array of deviations from the mean! Remember this in the exercise when you evaluate the results.
 
 ---
