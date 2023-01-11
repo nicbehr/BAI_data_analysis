@@ -142,7 +142,8 @@ Finally, in the very end of the file you find a number of additional functions w
 Peak Over Threshold Codeblock
 </summary>
 
-```R
+```R  
+
   if(method == 'POT')
   {
     sprintf('Extremes detection using peak over threshold method at: %f percentile',prob)
@@ -158,7 +159,8 @@ Peak Over Threshold Codeblock
     print(p)
     return(DF)
   }
-```
+```  
+
 </details>
 
 The first approach is the Point Over Threshold (POT) method. We define fixed thresholds for the dataset, defining the upper and lower bounds above or below which values will be considered extreme. The boundaries are defined by the quantiles we provided as an argument to the function.
