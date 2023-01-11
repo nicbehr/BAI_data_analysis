@@ -202,7 +202,7 @@ You will get a plot of the data with marked extreme low and high values (see spo
 Output Figure:
 </summary>
 
-![POT image](/assets/extreme_POT.png)
+![POT image](/assets/r_ex4/extreme_POT.png)
 *Figure 1: Extreme values based on the whole dataset POT method*
 
 </details>
