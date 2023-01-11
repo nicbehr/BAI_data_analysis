@@ -18,9 +18,9 @@ value (extreme relative to what?). Afterwards we will work with an example datas
 
 ### 1. Material
 You can download the required material from these sources:  
-[R-Script](Extreme_detection_script.R)  
-[Required Data](Tair_TS_CH-Dav_1997_2018.RData)  
-[Literatur](wmo-td_1500_en.pdf)  
+[R-Script](/assets/r_ex4/Extreme_detection_script.R)  
+[Required Data](/assets/r_ex4/Tair_TS_CH-Dav_1997_2018.RData)  
+[Literatur](/assets/r_ex4/wmo-td_1500_en.pdf)  
 
 ### 2. Background
 We will look at three different methods to determine extreme events from time series of meteorological data. The main difference between the methods is the way they define the reference, to which we compare a value to describe it as being "extreme" or not.  
