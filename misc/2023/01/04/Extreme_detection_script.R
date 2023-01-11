@@ -98,61 +98,57 @@ load('Tair_TS_CH-Dav_1997_2018.RData')  # load the timeseries data provided with
 summary(TairData)
 
 ## Extreme at 95th percentile using POT method---
-Tair_extreme_POT = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'POT')
-Extremes_per_year_POT = Extremes_per_year(Tair_extreme_POT)
-Plot_Extremes(Tair_extreme_POT %>% filter(Date > '2017-01-01'))
-Total_Extremes(Tair_extreme_POT)
-
+Tair_extreme_POT = Extreme_detection(TairData$Tair_f, TairData$Date, 60, 'POT')
 
 ## Extreme at 95th percentile using BM method---
 Tair_extreme_BM = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'BM', rollmean_period = 15)
-Quantiles(Tair_extreme_BM$Var_LTm, 5, 95)
-Extremes_per_year_BM = Extremes_per_year(Tair_extreme_BM)
-Plot_Extremes(Tair_extreme_BM %>% filter(Date > '2017-01-01'))
-Total_Extremes(Tair_extreme_BM)
-Print_Quantile_Thresholds(Tair_extreme_BM, 5, 95)
 
 ## Extreme at 95th percentile using MA method---
 Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA', rollmean_period = 15)
-Extremes_per_year_MA = Extremes_per_year(Tair_extreme_BM)
-Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01'))
-Total_Extremes(Tair_extreme_MA)
-Print_Quantile_Thresholds(Tair_extreme_MA, 5, 95)
-Plot_All_Extremes(Tair_extreme_POT, Tair_extreme_BM, Tair_extreme_MA)
+
 
 -------------------------------------------------------------------------------
 #3. Additional functions ------------------------------------------------------
 -------------------------------------------------------------------------------
+
   
-Quantiles = function(x, q_low, q_high){
+Quantiles = function(x, q){
+  # Computes the quantiles defined by q for a given array of data and visualizes
+  # the distribution of the data as well as the thresholds for the quantiles
+  
+  # separate the given q into lower and upper limits
+  q_high = q
+  q_low = 100 - q
+  
+  # find mean and sd to create a distribution from the input data
   x_mean = mean(x)
   x_sd = sd(x)
   y = dnorm(x, T1997_mean, T1997_sd)
+  
+  # calculate the quantiles
   qh = quantile(x,q_high*0.01, na.rm=TRUE)
   ql = quantile(x,q_low*0.01, na.rm=TRUE)
   
-  above_qh = TairData$Tair_f[TairData$Tair_f > qh]
-  below_ql = TairData$Tair_f[TairData$Tair_f < ql]
-  print(paste("Percentage of values below q",q_low,": ",sep = ""))
-  print(length(above_q90) / length(TairData$Tair_f) * 100)
-  print(paste("Percentage of values above q",q_high,": ",sep = ""))
-  print(length(below_q10) / length(TairData$Tair_f) * 100)
+  # Printing out the threshold values 
+  print(paste("Lower threshold of ",q_low,"%: ",sep = ""))
+  print(ql)
+  print(paste("Upper threshold of ",q_high,"%: ",sep = ""))
+  print(qh)
   
+  # Plotting distribution and thresholds
   plot(x,y)
   lines(c(ql,ql), c(0,1), col="red", lwd=4)
   lines(c(qh,qh), c(0,1), col="blue", lwd=4)
   legend("topleft", legend=c(paste("Q",q_low,sep = ""), paste("Q",q_high,sep = "")), col=c("red","blue"), lty=1, lwd=4)
 }
 
-Print_Quantile_Thresholds = function(DF, lower_limit, upper_limit){
-  print("Lower extreme limit: ")
-  print(quantile(DF$del_Var, probs=lower_limit * 0.01, na.rm=TRUE))
-  print("Upper extreme limit: ")
-  print(quantile(DF$del_Var, probs=upper_limit * 0.01, na.rm=TRUE ))
-}
-
 
 Plot_Extremes = function(DF){
+  # These are simply the plotting statements from the Extreme_Detection() method
+  # You can run filtered data sets on this to plot individual years
+  # The separation in conditional blocks is due to different plotting mechanisms
+  # between the POT and the other two methods
+  
   if ("Var_LTm" %in% colnames(DF)){
     p = DF %>% 
       ggplot(., aes(x = Date)) + 
@@ -160,8 +156,8 @@ Plot_Extremes = function(DF){
       geom_line(aes(y = Value, color = 'Value'), size = 0.4) + 
       geom_line(aes(y = Var_LTm, color = 'Long-term mean'), size = 0.8) + 
       scale_color_manual('', values = c('black','grey50'))
-    
     print(p)
+    
   }
   else {
     p = DF %>% 
@@ -169,12 +165,14 @@ Plot_Extremes = function(DF){
       geom_point(aes(color = Extreme)) + 
       geom_line(size = 0.4) + theme_bw()
     print(p)
-    return(DF)
   }
 }
 
 
 Extremes_per_year = function(df){
+  # This function aggregates all data points which are categorized as high and 
+  # low extremes, counts them and plots them 
+  
   Extremes_DF = data.frame(matrix(ncol = 4, nrow = 0))
   colna = c("Year","Extreme_low", "Extreme_high","Not_extreme")
   colnames(Extremes_DF) = colna
@@ -237,5 +235,10 @@ Plot_All_Extremes = function(df1, df2, df3){
   lines(sort(data3_h), x=((length(data3_h)+1):(length(data3_h)+length(data3_l))), col="red", lwd=line_width, lty=3)
   legend( "topleft", legend=c("MA low","MA high"), col = cols, lty=c(3,3))
   title("Extreme values for MA method")
-  
 }  
+
+Total_Extremes = function(DF){
+  total_extremes = table(DF$Extreme)
+  print(total_extremes)
+}
+

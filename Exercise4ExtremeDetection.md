@@ -208,108 +208,10 @@ As expected you can see that this plot gives us information about the extreme va
 ---------
 #### Exercise
 
-1. Lets fiddle with the code for a bit. Change the **prob** parameter and see how the output changes. How many extreme values do you expect when setting prob to 50? Think about it and then run the function with that quantile.
-2. Grab the function from the "Starter Code" below and try to change it in such a way that it plots the number of high, low and non-extreme events per year. Give it the output of your POT-run as parameter E.g. run the POT function for 75, 85 and 95, save the outputs in separate variables (e.g. POT_75, POT_85 etc.) and then call the function Extremes_per_year with these variables as parameters. If you get stuck you can find a solution at the end of the exercise. 
-
-<details>
-
-<summary>
-Starter Code
-</summary>
-
-```R
-Extremes_per_year = function(df){
-  # First we build an empty dataframe with our column names
-  Extremes_DF = data.frame(matrix(ncol = 4, nrow = 0))
-  colna = c("Year","Extreme_low", "Extreme_high","Not_extreme")
-  colnames(Extremes_DF) = colna
-
-  # Now we filter the start and end year from the given dataframe. This gives flexibility so we can use other dataframes with different timescales
-  startyear = as.integer(format(as.Date(df$Date[1], format="%d/%m/%Y"),"%Y"))
-  endyear = as.integer(format(as.Date(df$Date[nrow(df)], format="%d/%m/%Y"),"%Y"))
-
-  # Now we build a vector comprising of our years
-  years = {insert here}:{insert here}  # <==================  insert correct values to create a vector of all years
-  
-  for (y in years){   
-    startdate = paste(y,'-01-01', sep="")
-    enddate = paste(y+1,'-01-01', sep="")
-    year = df %>% 
-      filter((Date < {insert here})&(Date >= {insert here}))  # <==================  insert correct values to filter the date on
-    table = table(year$Extreme)
-    Extremes_DF[nrow(Extremes_DF)+1,] = c(y, as.numeric(table["Extreme-low"]), as.numeric(table["Extreme-high"]), as.numeric(table["Not-Extreme"]))
-  }
-  
-  Year = Extremes_DF$Year
-  Number_of_Extremes = Extremes_DF$Extreme_high
-  Low_Extremes = Extremes_DF$Extreme_low
-  Not_Extreme = Extremes_DF$Not_extreme
-  
-  plot({insert here}, {insert here}, col="red", pch=16) # <==================  insert correct values to plot years vs high extremes
-  abline(lm(Extreme_high ~ Year, data=Extremes_DF), col="red", lwd=2, lty=2)
-  points({insert here}, {insert here}, col="blue", pch=16) # <==================  insert correct values to plot years vs low extremes
-  abline(lm(Extreme_low ~ Year, data=Extremes_DF), col="blue", lwd=2, lty=2)
-  legend("topleft", 
-         legend=c("Nr. of high extremes", "Nr. of low extremes", "Regression for high extremes", "Regression for low extremes"), 
-         col=c("red","blue","red","blue"), 
-         pch = c(16,16,NA,NA), 
-         lty=c(NA,NA,2,2),
-         lwd=2)
-  return(Extremes_DF)
-
-  # Example for calling the functions:
-  POT_75 = Extreme_detection(TairData$Tair_f, TairData$Date, 75, 'POT')
-  Extremes_per_year_POT = Extremes_per_year(POT_75)
-}
-```
-</details>
-
-Compare the outputs of your function calls. Look at the values which are defined as extreme. What seems to an appropriate threshold for an extreme quantile? Is the regression plotted in the yearly extremes statistically solid? If you want, you can further fiddle with the code and remember the "summary()" method, that can describe a linear model. Can we take away something from the plots and our data?
-
-<details>
-
-<summary>
-Solution
-</summary>
-
-```R 
-Extremes_per_year = function(df){
-  Extremes_DF = data.frame(matrix(ncol = 4, nrow = 0))
-  colna = c("Year","Extreme_low", "Extreme_high","Not_extreme")
-  colnames(Extremes_DF) = colna
-  startyear = as.integer(format(as.Date(df$Date[1], format="%d/%m/%Y"),"%Y"))
-  endyear = as.integer(format(as.Date(df$Date[nrow(df)], format="%d/%m/%Y"),"%Y"))
-  years = startyear:endyear
-  
-  for (y in years){
-    startdate = paste(y,'-01-01', sep="")
-    enddate = paste(y+1,'-01-01', sep="")
-    year = df %>% 
-      filter((Date < enddate)&(Date >= startdate))
-    table = table(year$Extreme)
-    Extremes_DF[nrow(Extremes_DF)+1,] = c(y, as.numeric(table["Extreme-low"]), as.numeric(table["Extreme-high"]), as.numeric(table["Not-Extreme"]))
-  }
-  
-  Year = Extremes_DF$Year
-  Number_of_Extremes = Extremes_DF$Extreme_high
-  Low_Extremes = Extremes_DF$Extreme_low
-  Not_Extreme = Extremes_DF$Not_extreme
-  
-  plot(Year, Number_of_Extremes, col="red", pch=16)
-  abline(lm(Extreme_high ~ Year, data=Extremes_DF), col="red", lwd=2, lty=2)
-  points(Year, Low_Extremes, col="blue", pch=16)
-  abline(lm(Extreme_low ~ Year, data=Extremes_DF), col="blue", lwd=2, lty=2)
-  legend("topleft", 
-         legend=c("Nr. of high extremes", "Nr. of low extremes", "Regression for high extremes", "Regression for low extremes"), 
-         col=c("red","blue","red","blue"), 
-         pch = c(16,16,NA,NA), 
-         lty=c(NA,NA,2,2),
-         lwd=2)
-  return(Extremes_DF)
-
-  ```
-</details>
-
+1. Lets fiddle with the code for a bit. Change the **prob** parameter to 85, 75 and see how the output changes. How many extreme values do you expect when setting prob to 50? Think about it and then run the function with that quantile.
+2. In the additional methods at the end of the script you can find a function called ``` Extremes_per_year()```. Run it with your output from the POT extreme detection with different quantiles as argument and evaluate the output. What do the trend lines indicate? 
+Extra: If you want you can evaluate the trend lines by fiddeling with the function code. Remember the lesson about linear models and the "summary()" method. How would you describe the usefulness of the linear model fitted to this data?
+3. You can visualize the thresholds that define extreme values using the ```Quantiles()``` function which is given in the additional functions. Run it with the output of your extreme detection function for a few different prob arguments. Note that you have to pass the lower and upper quantiles to the ```Quantile()``` function, e.g. for 95 % you call it as ```Quantiles(dataframe, 5, 95)```. Look at the different plots, what do you think would be an appropriate threshold?
 
 ----------
 
@@ -374,15 +276,23 @@ mean(boot(Var_15ma,meanFunc,100)$t, na.rm = TRUE))
 The order in which these functions are executed is form the inside out: first the function ```boot()``` is called with the parameters Var_15ma, meanFunc and 100. This means we take 100 subsamples from the column Var_15ma and call the function ```meanFunc()``` on them. This is just a function that calculates the mean of a vector. With the $t after the function call we access the resulting vector of 100 means which is returend from the boot() function. Then we simply calculate the mean from these means and ingore the NA-values with ``` mean(..., na.rm = TRUE)```.
 
 **Step 4**
-Finally we calculate the deviation of each datapoint from the previously derived mean and assign it one of the categories "Extreme-high", "Extreme-low" or "Not-Extreme", just like we did in the POT approach. The rest is plotting.
+Finally we calculate the deviation of each datapoint from the previously derived mean and create a new column called "del_Var". Now these deviations from the mean are split into quantiles and del_vars which are above or below the threshold are defined as extreme:
+
+```R
+mutate(del_Var = Value - Var_LTm) %>%       ## deviation from a long-term mean
+mutate(Extreme = if_else(del_Var > quantile(del_Var, probs = prob*0.01, na.rm = TRUE), 'Extreme-high',
+                          if_else(del_Var < quantile(del_Var, probs = (1-prob*0.01), na.rm = TRUE), 'Extreme-low', 'Not-Extreme')))  ## Assigning extreme classes based on del_Var
+    
+```
+Note: In the POT approach the quantiles where built from the whole dataset itself. Here, the quantiles are built from the array of deviations from the mean! Remember this in the exercise when you evaluate the results.
 
 ---
 ### Exercises
 
-1. After using POT and the BM method with daily blocks, which method do you expect to yield more extreme values per year? Think about it and then use the previously built Extremes_per_year() function to check your hypothesis
-2. The Extreme_Detection() function has one parameter called "rollmean_period" which has a default value of 15. This means that the time window on which the mean for each day is calculated is 15 days, the day + the 7 days before and after. Think about how it might affect the outcomes if you set this value to 1 or to 365. To evaluate, you can use the extra functions given in the end of the script, Plot_Extremes() and Quantiles(). For example run the Extreme_Detection() with the rollmean_period of 1 and use the Plot_Extremes() function to plot a specific year like this:
+1. After using POT and the BM method with daily blocks, which method do you expect to yield more extreme values per year? Think about it and then use the ```Extremes_per_year()``` function to check your hypothesis. You can also print a table of the number of high and low extremes using the given function ```Total_Extremes()``` which also takes a dataframe as an argument.
+2. The Extreme_Detection() function has one parameter called "rollmean_period" which has a default value of 15. This means that the time window on which the mean for each day is calculated is 15 days, the day + the 7 days before and after. Think about how it might affect the outcomes if you set this value to 1 or to 365. To evaluate, you can use the extra functions given in the end of the script, ```Plot_Extremes()``` and ```Quantile()```. Remember what the quantiles where built from (so which column you have to pass to the ```Quantile()``` function). You can use the ```Plot_Extremes()``` function to plot the extreme values of a specific year e.g. for 2017 like this:  
 ```R
-Plot_Extremes(Tair_extreme_BM %>% filter(Date > '2017-01-01'))
+Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01' & Date < '2018-01-01'))
 ```
 
 
@@ -429,8 +339,8 @@ The final method we will look at is the moving average method. As the name alrea
 
 ### Exercises
 
-1. Think about how using a smaller time reference window might affect the extreme value detection. Would you expect extreme values in this approach to be more or less frequent than in the block averaging method? Then run the detection function and save the output in a new variable. Finally use the given evaluation function Total_Extremes() and pass it the output. Was your guess right?  
-2. You have now run all three methods. In the evaluation functions you have a given function "Plot_All_Extremes()". Call it with your POT, BA and MA outputs as arguments and look at the temperature ranges which where categorized as extreme values. Write up a very short summarization.   
-3. Change the parameter rollmean_period of the extreme detection function with the MA method to 365 and pass that output to the "Plot_All_Extremes()" function. How do you explain the output in comparison to the other methods?  
+1. Think about how using a smaller time reference window might affect the extreme value detection. Would you expect extreme values in this approach to be more or less frequent than in the block averaging method? Then run the detection function and save the output in a new variable. Finally use the given evaluation function ```Total_Extremes()``` and pass it the output. Was your guess right?  
+2. You have now run all three methods. In the evaluation functions you have a given function ```Plot_All_Extremes()```. Call it with your POT, BA and MA outputs as arguments and look at the temperature ranges which where categorized as extreme values. Write up a very short summarization.   
+3. Change the parameter rollmean_period of the extreme detection function with the MA method to 365 and pass that output to the ```Plot_All_Extremes()``` function. How do you explain the output in comparison to the other methods?  
 
 ----
