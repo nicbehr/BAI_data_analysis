@@ -314,7 +314,7 @@ Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01' & Date < '2018-01-0
 Moving Average Codeblock
 </summary>
 
-```R
+```
   if(method == 'MA')
   {
     sprintf('Extremes detection using "moving average" at %f percentile',prob)
