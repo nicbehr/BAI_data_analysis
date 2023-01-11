@@ -110,6 +110,7 @@ Quantiles(Tair_extreme_BM$Var_LTm, 5, 95)
 Extremes_per_year_BM = Extremes_per_year(Tair_extreme_BM)
 Plot_Extremes(Tair_extreme_BM %>% filter(Date > '2017-01-01'))
 Total_Extremes(Tair_extreme_BM)
+Print_Quantile_Thresholds(Tair_extreme_BM, 5, 95)
 
 ## Extreme at 95th percentile using MA method---
 Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA', rollmean_period = 15)
@@ -117,7 +118,8 @@ Extremes_per_year_MA = Extremes_per_year(Tair_extreme_BM)
 Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01'))
 Total_Extremes(Tair_extreme_MA)
 Print_Quantile_Thresholds(Tair_extreme_MA, 5, 95)
-Print_Dates_Of_Extremes(Tair_extreme_MA)
+Plot_All_Extremes(Tair_extreme_POT, Tair_extreme_BM, Tair_extreme_MA)
+
 -------------------------------------------------------------------------------
 #3. Additional functions ------------------------------------------------------
 -------------------------------------------------------------------------------
@@ -144,9 +146,9 @@ Quantiles = function(x, q_low, q_high){
 
 Print_Quantile_Thresholds = function(DF, lower_limit, upper_limit){
   print("Lower extreme limit: ")
-  print(quantile(DF$del_var, probs=lower_limit * 0.01 ))
+  print(quantile(DF$del_Var, probs=lower_limit * 0.01, na.rm=TRUE))
   print("Upper extreme limit: ")
-  print(quantile(DF$del_var, probs= 1- upper_limit * 0.01 ))
+  print(quantile(DF$del_Var, probs=upper_limit * 0.01, na.rm=TRUE ))
 }
 
 
@@ -156,7 +158,6 @@ Plot_Extremes = function(DF){
       ggplot(., aes(x = Date)) + 
       geom_point(aes(y = Value, fill = Extreme), color = 'black', size=2, stroke = 0, shape = 21) + 
       geom_line(aes(y = Value, color = 'Value'), size = 0.4) + 
-      theme_bw() +
       geom_line(aes(y = Var_LTm, color = 'Long-term mean'), size = 0.8) + 
       scale_color_manual('', values = c('black','grey50'))
     
@@ -172,12 +173,6 @@ Plot_Extremes = function(DF){
   }
 }
 
-
-Print_Dates_Of_Extremes = function(DF){
-  extremes = DF %>% filter(Extreme == "Extreme-high" | Extreme == "Extreme-low")
-  d = density(extremes$Value)
-  plot(d)
-}
 
 Extremes_per_year = function(df){
   Extremes_DF = data.frame(matrix(ncol = 4, nrow = 0))
@@ -213,3 +208,34 @@ Extremes_per_year = function(df){
          lwd=2)
   return(Extremes_DF)
 }
+
+Plot_All_Extremes = function(df1, df2, df3){
+  data1_h = df1 %>% filter(Extreme == 'Extreme-high') %>% pull(Value)
+  data1_l = df1 %>% filter(Extreme == 'Extreme-low') %>% pull(Value)
+
+  data2_h = df2 %>% filter(Extreme == 'Extreme-high') %>% pull(Value)
+  data2_l = df2 %>% filter(Extreme == 'Extreme-low') %>% pull(Value)
+  
+  data3_h = df3 %>% filter(Extreme == 'Extreme-high') %>% pull(Value)
+  data3_l = df3 %>% filter(Extreme == 'Extreme-low') %>% pull(Value)
+
+  line_width = 2
+  cols <- c("blue", "red")
+
+  par(mfrow=c(1,3))
+  plot(sort(data1_l), type="l", ylim=c(-20,25), xlim=c(0,850), lty=1 , col="blue", lwd=line_width, ylab = "Temperature of Extreme Value [°C]")
+  lines(sort(data1_h), x=((length(data1_h)+1):(length(data1_h)+length(data1_l))), col="red", lwd=line_width, lty=1)
+  legend( "topleft", legend=c("POT low", "POT high"), col = cols, lty=c(1,1))
+  title("Extreme values for POT method")
+  
+  plot(sort(data2_l), type="l", ylim=c(-20,25), xlim=c(0,1500), lty=2 , col="blue", lwd=line_width, ylab = "Temperature of Extreme Value [°C]")
+  lines(sort(data2_h), x=((length(data2_h)+1):(length(data2_h)+length(data2_l))), col="red", lwd=line_width, lty=2)
+  legend( "topleft", legend=c("BM low", "BM high"), col = cols, lty=c(2,2))
+  title("Extreme values for BA method")
+  
+  plot(sort(data3_l), type="l", ylim=c(-20,25), xlim=c(0,850), lty=3 , col="blue", lwd=line_width, ylab = "Temperature of Extreme Value [°C]")
+  lines(sort(data3_h), x=((length(data3_h)+1):(length(data3_h)+length(data3_l))), col="red", lwd=line_width, lty=3)
+  legend( "topleft", legend=c("MA low","MA high"), col = cols, lty=c(3,3))
+  title("Extreme values for MA method")
+  
+}  

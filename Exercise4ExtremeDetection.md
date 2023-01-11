@@ -43,7 +43,7 @@ In meteorological data
 </details>
 
 ### 3. Methods and Implementation
-Lets now look at three different methods to analyze extreme events in our sample dataset. We will talk about the reasoning and the R implementation of the methods.
+Lets now look at three different methods to analyze extreme events in our sample dataset. We will talk about the reasoning and the R implementation of the methods. The first section is a general introduction to the code. We will then go through each method. In the beginning of each chapter you can click on the little arrow to unfold the code for the specific method. This way you can always quickly refer to the code.
 
 In the code you have downloaded is a method called "Extreme_detection" which takes the arguments X, timecol, prob and method. 
 ```R
@@ -133,9 +133,15 @@ Tair_extreme_BM = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'BM')
 ## Extreme at 95th percentile using MA method---
 Tair_extreme_MA = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'MA')
 ```
+Finally, in the very end of the file you find a number of additional functions which will be used in the exercises. 
 
 #### 3.1 Peak Over Threshold (POT)
-The first approach is the most straighforward and was already teasered in the foreword. In the Point Over Threshold (POT) approach we define fixed thresholds for the dataset, defining the upper and lower bounds above or below which values will be considered extreme. The boundaries are defined by the quantiles we provided as an argument to the function.
+<details>
+
+<summary>
+Peak Over Threshold Codeblock
+</summary>
+
 ```R
   if(method == 'POT')
   {
@@ -153,7 +159,11 @@ The first approach is the most straighforward and was already teasered in the fo
     return(DF)
   }
 ```
-So what is happening here? 
+</details>
+
+The first approach is the Point Over Threshold (POT) method. We define fixed thresholds for the dataset, defining the upper and lower bounds above or below which values will be considered extreme. The boundaries are defined by the quantiles we provided as an argument to the function.
+
+So what is happening in the code? 
 
 Very simple: First we create a new Dataframe with our data and the respective dates.  This dataframe is fed into a pipeline where we "mutate" the dataframe. In the mutation, a new column is added called "Extreme". This column is then populated through a conditional function, the if_else() function from the dplyr package. Here the code gets a bit complicated, because there is a second if_else() inside the first if_else() function. It is a "nested" function.  It works like this:  
 Normally the if_else() function checks a condition and for all values passed and returns one of two values, depending on whether the condition is true or false. Consider this:
@@ -340,7 +350,7 @@ Extremes_per_year = function(df){
 The next method we are looking at is the "Block Maxima" method. As the name states, we are looking at a certain "block" of data and find the maxima based on the defined threshold of the values in this block. There are several ways we could define these reference blocks. For example we could look at every year individually and find the extreme values for these. We would get an array of the hottest and coldest days of each year separately.
 If we where more interested in extreme values across years, we could for example define a block as data from each season across the years. So the block "spring" would consist of data from 01.03. to 31.05. across all the years in the dataset. We could then find extremes based on the quantiles of the seasonally data and separate e.g. extreme values in spring and autumn from the overshadowing extreme values in winter and summer.
 
-In our example code the blocks are defined on a daily basis as follows: 
+In our example code the blocks are defined as the values for each single day across all the years. The procedure is as follows: 
 
 **Step 1**
 In the first line we again create a dataframe with the data, a date column and then add a new column called "DOY" with a mutation, that gives each date a value of 1 to 365. We can later use these values to calculate a mean for each year across the seasons:
@@ -379,11 +389,11 @@ Plot_Extremes(Tair_extreme_BM %>% filter(Date > '2017-01-01'))
 ---
 
 #### 3.3. Moving Average Method (MA)
-The final method we will look at is the moving average method. As the name already states, here the extremes are detected on a more temporally constrained basis. We use the same syntax as in the BM method to compute the rolling mean for any datapoint. Then it is evaluated whether the datapoint is an extreme value based on its deviation from the rolling mean around it. 
+
 <details>
 
 <summary>
-Full Code
+Moving Average Codeblock
 </summary>
 
 ```R
@@ -412,3 +422,11 @@ Full Code
     return(DF)
   }
   ```
+  </details>
+The final method we will look at is the moving average method. As the name already states, here the extremes are detected on a more temporally constrained basis, the moving average around each datapoint. Take a look at the code block above for the moving average method. Everything used here was already used in the blocks before, only the deviation from the mean (the "del_var") is now computed differently.  
+---
+### Exercise
+
+1. Think about how using a smaller time reference window might affect the extreme value detection. Would you expect extreme values in this approach to be more or less frequent than in the block averaging method? Then run the detection function and save the output in a new variable. Finally use the given evaluation function Total_Extremes() and pass it the output. Was your guess right?
+2. You have now run all three methods. In the evaluation functions you have a given function "Plot_All_Extremes()". Call it with your POT, BA and MA outputs as arguments and look at the temperature ranges which where categorized as extreme values. Write up a very short summarization. 
+3. Change the parameter rollmean_period of the extreme detection function with the MA method to 365 and pass that output to the "Plot_All_Extremes()" function. How do you explain the output in comparison to the other methods?
