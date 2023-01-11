@@ -137,12 +137,7 @@ Finally, in the very end of the file you find a number of additional functions w
 
 #### 3.1 Peak Over Threshold (POT)
 
-<details>
-
-<summary>
-Peak Over Threshold Codeblock
-</summary>
-
+  
 ```R  
 
   if(method == 'POT')
@@ -161,9 +156,7 @@ Peak Over Threshold Codeblock
     return(DF)
   }
 ```  
-
-</details>
-
+  
 The first approach is the Point Over Threshold (POT) method. We define fixed thresholds for the dataset, defining the upper and lower bounds above or below which values will be considered extreme. The boundaries are defined by the quantiles we provided as an argument to the function.
 
 So what is happening in the code? 
@@ -197,16 +190,11 @@ Go ahead and run the example for the POT method:
 Tair_extreme_POT = Extreme_detection(TairData$Tair_f, TairData$Date, 95, 'POT')
 ```
 You will get a plot of the data with marked extreme low and high values (see spoiler below) as well as a dataframe that contains the "Extreme" column along with the original data.
-<details>
 
-<summary>
-Output Figure:
-</summary>
-
+Output Figure:  
 ![POT image](/assets/r_ex4/extreme_POT.png)
 *Figure 1: Extreme values based on the whole dataset POT method*
-
-</details>
+  
 As expected you can see that this plot gives us information about the extreme values with respect to the whole timeline. 
 
 ---------
@@ -220,10 +208,6 @@ Extra: If you want you can evaluate the trend lines by fiddeling with the functi
 ----------
 
 #### 3.2. Block Maxima Method (BM)
-
-<details>
-
-<summary> Block Maxima Codeblock </summary>
 
 ```R
   if(method == 'BM')
@@ -250,8 +234,7 @@ Extra: If you want you can evaluate the trend lines by fiddeling with the functi
     
     return(DF)
   }
-  ```
-  </details>
+  ```  
 
 The next method we are looking at is the "Block Maxima" method. As the name states, we are looking at a certain "block" of data and find the maxima based on the defined threshold of the values in this block. There are several ways we could define these reference blocks. For example we could look at every year individually and find the extreme values for these. We would get an array of the hottest and coldest days of each year separately.
 If we where more interested in extreme values across years, we could for example define a block as data from each season across the years. So the block "spring" would consist of data from 01.03. to 31.05. across all the years in the dataset. We could then find extremes based on the quantiles of the seasonally data and separate e.g. extreme values in spring and autumn from the overshadowing extreme values in winter and summer.
@@ -303,18 +286,10 @@ Note: In the POT approach the quantiles where built from the whole dataset itsel
 Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01' & Date < '2018-01-01'))
 ```
 
-
 ---
 
 #### 3.3. Moving Average Method (MA)
-The final method we will look at is the moving average method. As the name already states, here the extremes are detected on a more temporally constrained basis, the moving average around each datapoint. Take a look at the code block above for the moving average method. Everything used here was already used in the blocks before, only the deviation from the mean (the "del_var") is now computed differently.  
-
-<details>
-
-<summary>
-Moving Average Codeblock
-</summary>
-
+Codeblock:  
 ```R
   if(method == 'MA')
   {
@@ -341,7 +316,8 @@ Moving Average Codeblock
     return(DF)
   }
   ```
-  </details>
+  
+The final method we will look at is the moving average method. As the name already states, here the extremes are detected on a more temporally constrained basis, the moving average around each datapoint. Take a look at the code block above for the moving average method. Everything used here was already used in the blocks before, only the deviation from the mean (the "del_var") is now computed differently.  
 
 ----
 
