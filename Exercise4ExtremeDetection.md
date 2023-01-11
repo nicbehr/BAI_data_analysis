@@ -307,6 +307,7 @@ Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01' & Date < '2018-01-0
 ---
 
 #### 3.3. Moving Average Method (MA)
+The final method we will look at is the moving average method. As the name already states, here the extremes are detected on a more temporally constrained basis, the moving average around each datapoint. Take a look at the code block above for the moving average method. Everything used here was already used in the blocks before, only the deviation from the mean (the "del_var") is now computed differently.  
 
 <details>
 
@@ -314,7 +315,7 @@ Plot_Extremes(Tair_extreme_MA %>% filter(Date > '2017-01-01' & Date < '2018-01-0
 Moving Average Codeblock
 </summary>
 
-```
+```R
   if(method == 'MA')
   {
     sprintf('Extremes detection using "moving average" at %f percentile',prob)
@@ -341,7 +342,6 @@ Moving Average Codeblock
   }
   ```
   </details>
-The final method we will look at is the moving average method. As the name already states, here the extremes are detected on a more temporally constrained basis, the moving average around each datapoint. Take a look at the code block above for the moving average method. Everything used here was already used in the blocks before, only the deviation from the mean (the "del_var") is now computed differently.  
 
 ----
 
