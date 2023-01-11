@@ -260,11 +260,15 @@ In our example code the blocks are defined as the values for each single day acr
 
 **Step 1**  
 In the first line we again create a dataframe with the data, a date column and then add a new column called "DOY" with a mutation, that gives each date a value of 1 to 365. We can later use these values to calculate a mean for each year across the seasons:  
-``` DF = data.frame(Value = X, Date = timecol) %>% mutate(DOY = as.numeric(format(Date,'%j'))) # calculating DOY ```
+```R
+ DF = data.frame(Value = X, Date = timecol) %>% mutate(DOY = as.numeric(format(Date,'%j'))) # calculating DOY 
+ ```
 
 **Step 2**  
 Next a second mutation is being done, which creates the column "Var_15ma". This is the 15 day moving average around every day. Moving average means that the "window" of data we are calculating the mean from varies. For each data point  
-``` DF = DF %>% mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) # 15-day moving average and then long-term mean ```  
+```R
+ DF = DF %>% mutate(Var_15ma = lead(c(rep(NA, 15 - 1),zoo::rollmean(Value,15, align = 'center')),7)) # 15-day moving average and then long-term mean 
+ ```  
 Through this, we accquire a smoothing of the daily temperature values and make the underlying dataset for our daily temperature distribution more broad. The reasoning is the following:  
 We want to create a representative dataset for daily temperature values across the years. If we use the single day for each year, we have a dataset of 18 datapoints which can easily include heavy outliers. By using a moving average of 15 days we enhance our dataset for each day by a factor of 15 to 270 datapoints, still restricted to a pretty small time window. While it does reduce the impact of individual extremely hot or cold days, it is more likely to representatively capture the state of the atmosphere around the time of interest.  
   
