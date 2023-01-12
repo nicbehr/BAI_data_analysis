@@ -43,7 +43,7 @@ In meteorological data
 </details>
 
 ### 3. Methods and Implementation
-Lets now look at three different methods to analyze extreme events in our sample dataset. We will talk about the reasoning and the R implementation of the methods. The first section is a general introduction to the code. We will then go through each method. In the beginning of each chapter you can click on the little arrow to unfold the code for the specific method. This way you can always quickly refer to the code.
+Lets now look at three different methods to analyze extreme events in our sample dataset. We will talk about the reasoning and the R implementation of the methods. The first section is a general introduction to the code. We will then go through each method. In the beginning of each chapter you can find the code for the specific method. This way you can always quickly refer to the context.
 
 In the code you have downloaded is a method called "Extreme_detection" which takes the arguments X, timecol, prob and method. 
 ```R
