@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "2 - Data Visualization Intro"
+title: "2. Data Visualization Intro"
 permalink: /exercise-2/
 ---
 

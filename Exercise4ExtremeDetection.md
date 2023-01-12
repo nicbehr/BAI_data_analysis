@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "4 - Extreme Detection"
+title: "4. Extreme Detection"
 permalink: /exercise-4/
 ---
 
