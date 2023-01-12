@@ -123,7 +123,7 @@ Quantiles = function(x, q){
   # find mean and sd to create a distribution from the input data
   x_mean = mean(x)
   x_sd = sd(x)
-  y = dnorm(x, T1997_mean, T1997_sd)
+  y = dnorm(x, x_mean, x_sd)
   
   # calculate the quantiles
   qh = quantile(x,q_high*0.01, na.rm=TRUE)
@@ -173,22 +173,33 @@ Extremes_per_year = function(df){
   # This function aggregates all data points which are categorized as high and 
   # low extremes, counts them and plots them 
   
+  # we create a new empty dataframe and then set the required column names
   Extremes_DF = data.frame(matrix(ncol = 4, nrow = 0))
   colna = c("Year","Extreme_low", "Extreme_high","Not_extreme")
   colnames(Extremes_DF) = colna
+
+  # here we parse the years from the input df from the first and last entry to create an array of timestamps
   startyear = as.integer(format(as.Date(df$Date[1], format="%d/%m/%Y"),"%Y"))
   endyear = as.integer(format(as.Date(df$Date[nrow(df)], format="%d/%m/%Y"),"%Y"))
   years = startyear:endyear
   
+  # Here we use a loop to go over each year and filter all  the entries which are from the year. 
   for (y in years){
     startdate = paste(y,'-01-01', sep="")
     enddate = paste(y+1,'-01-01', sep="")
     year = df %>% 
       filter((Date < enddate)&(Date >= startdate))
+
+    # The command table is used to count different entries in a dataframe. 
+    # By indexing it with $Extreme we get a count of each unique entry in the Extreme column, so we count how many entries
+    # if 'Extreme-high', 'Extreme-low' etc. are in the column
     table = table(year$Extreme)
+
+    # Here we will add the counts in the table for each year to the 
     Extremes_DF[nrow(Extremes_DF)+1,] = c(y, as.numeric(table["Extreme-low"]), as.numeric(table["Extreme-high"]), as.numeric(table["Not-Extreme"]))
   }
   
+  # The rest is plotting of the counts of extremes:
   Year = Extremes_DF$Year
   Number_of_Extremes = Extremes_DF$Extreme_high
   Low_Extremes = Extremes_DF$Extreme_low
@@ -208,6 +219,9 @@ Extremes_per_year = function(df){
 }
 
 Plot_All_Extremes = function(df1, df2, df3){
+  # This function filters all the detected low and high extremes from the three methods and plots them, sorted in ascending order
+  # This way it gives an overview of the rangs of data which are detected as extreme values
+
   data1_h = df1 %>% filter(Extreme == 'Extreme-high') %>% pull(Value)
   data1_l = df1 %>% filter(Extreme == 'Extreme-low') %>% pull(Value)
 
